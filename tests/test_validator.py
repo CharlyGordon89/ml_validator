@@ -2,7 +2,13 @@
 
 import pandas as pd
 import pytest
-from ml_validator.validator import validate_schema
+from ml_validator.validator import (
+    validate_schema,
+    validate_no_nulls,  
+    validate_ranges     
+)
+
+# ... keep existing tests ...
 
 def test_valid_schema():
     df = pd.DataFrame({
@@ -29,3 +35,18 @@ def test_wrong_dtype():
     with pytest.raises(ValueError):
         validate_schema(df, schema)
 
+def test_null_validation():
+    df = pd.DataFrame({
+        "age": [25, None],
+        "name": ["Alice", "Bob"]
+    })
+    # Should pass when allowing nulls in age
+    validate_no_nulls(df, allow_null=["age"])
+    
+    # Should fail otherwise
+    with pytest.raises(ValueError):
+        validate_no_nulls(df)
+
+def test_range_validation():
+    df = pd.DataFrame({"age": [15, 130]})
+    validate_ranges(df, {"age": {"min": 0, "max": 120}})
