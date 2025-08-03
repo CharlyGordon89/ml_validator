@@ -1,2 +1,3 @@
-from .validator import validate_schema, validate_no_nulls, validate_ranges
-__all__ = ["validate_schema", "validate_no_nulls", "validate_ranges"]
+from .core.validator import SchemaValidator
+
+__all__ = ["SchemaValidator"]
